@@ -1,0 +1,230 @@
+*{
+    font-family: "Times New Roman", Serif;
+    font-size: 62.5%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+
+/*The table outline*/
+.submittedShipmentsTable{
+    display: flex;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: auto;
+    height: 200rem;
+    position: relative;
+    left: 0.2rem;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-right-style: solid;
+    min-width: 1298px;
+    max-width: 1000px;
+    overflow: hidden;
+
+}
+
+.submittedShipmentsTable td{
+    border-top: 1px;
+    border-bottom: 1px;
+    border-left: 1px;
+    border-right: 1px;
+    border-color: #ddd;
+    border-style: solid;
+    padding: 8px;
+    font-size: 1.5rem;
+    text-align: center;
+    color: black;
+    width: auto;
+    height: auto;
+    white-space: nowrap;
+}
+
+
+.submittedShipmentsTable tr{
+    width: 100rem;
+    position: relative;
+    left: -100rem;
+    height: auto;
+
+}
+
+
+
+
+.submittedShipmentsTable thead #myTableHeader{
+    display: block;
+    left: 2rem;
+    position: relative;
+    font-size: 2rem;
+
+}
+
+
+
+
+.submittedShipmentsTable thead #myTableHeader th{
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    border-top: 1px;
+    border-bottom: 1px;
+    border-left: 1px;
+    border-right: 1px;
+    border-collapse: collapse;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-right-color: #ddd;
+    border-left-color: #ddd;
+    border-top-color: #ddd;
+    border-bottom-color: #ddd;
+    position: relative;
+    left: -1.99rem;
+}
+
+.submittedShipmentsTable:nth-child(even){
+    background-color: darkseagreen;
+}
+
+
+.resultsFetched{
+    display: block;
+    position: relative;
+    left: -118.3rem;
+    top: 7rem;
+}
+
+
+
+
+
+.deleteBtn{
+    position: relative;
+    background-color: red;
+    color: white;
+    height: 2rem;
+    width: 2rem;
+}
+
+.deleteBtn:hover{
+    background-color: darkred;
+}
+
+.updateBtn{
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+
+}
+
+.updateBtn:hover{
+    background-color: darkseagreen;
+}
+#errorMessageDisplayed{
+    font-size: 1.5rem;
+    color: red;
+
+}
+
+
+
+
+/*
+th{
+    display: flex;
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 0.1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    position: relative;
+    left: -5.6rem;
+
+}
+*/
+
+/*
+
+.resultsFetchedColReq{
+    position: relative;
+    left: -2rem;
+    top: -2rem;
+
+
+}
+.resultsFetchedColCust{
+    position: relative;
+    left: 4rem;
+    top: -2rem;
+}
+
+.resultsFetchedColEm{
+    position: relative;
+    left: 7rem;
+    top: -2rem;
+
+}
+
+.resultsFetchedColCN{
+    position: relative;
+    left: 21.2rem;
+}
+
+.resultsFetchedColOA{
+    position: relative;
+    left: 25.2rem;
+}
+
+.resultsFetchedColDA{
+    position: relative;
+    left: 29rem;
+}
+
+.resultsFetchedColPN{
+    position: relative;
+    left: 36.2rem;
+}
+
+.resultsFetchedColTC{
+    position: relative;
+    left: 47rem;
+}
+
+.resultsFetchedColNC{
+    position: relative;
+    left: 58.5rem;
+}
+
+.resultsFetchedColW{
+    position: relative;
+    left: 70rem;
+}
+
+.resultsFetchedColDV{
+    position: relative;
+    left: 79.5rem;
+}
+
+
+.resultsFetchedColPT{
+    position: relative;
+    left: 88.5rem;
+}
+
+.resultsFetchedColS{
+    position: relative;
+    left: 98.3rem;
+}
+
+ */
+
+
+
+
+

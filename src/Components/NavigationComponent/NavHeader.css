@@ -1,0 +1,55 @@
+*{
+    font-family: "Times New Roman", Arial, SansSerif, Serif;
+    font-size: 62.5%;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+.topNav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 8vh;
+    background-color: #24252A;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+    width: 130rem;
+
+}
+
+
+.logo{
+    color: gray;
+    letter-spacing: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    left: -7.8rem;
+    top: 0.15rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.logo:hover{
+    color: lightgray;
+}
+
+.linkblock{
+    display: flex;
+    justify-content: space-around;
+    width: 30rem;
+}
+
+.links{
+    font-size: 1.5rem;
+    font-family: Arial, SansSerif, serif;
+    color: gray;
+    text-decoration: none;
+    position: relative;
+    left: 12rem;
+}
+

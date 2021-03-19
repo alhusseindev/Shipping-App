@@ -1,0 +1,101 @@
+*{
+    box-sizing: border-box;
+    font-family: "Times New Roman", Arial, SansSerif, Serif;
+    font-size: 62.5%;
+    justify-content: left;
+}
+
+
+h1{
+    font-family: "Times New Roman", Arial, SansSerif, Serif;
+    font-size: 3rem;
+    text-align: center;
+    color: green;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+input{
+    font-size: 2rem;
+    margin-left: 0.9rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    width: 23rem;
+    height: 2.3rem;
+    text-align: center;
+    outline-color: black;
+    position: relative;
+    left: 10rem;
+    top: -2.4rem;
+}
+
+input:hover{
+    border-color: gray;
+}
+
+::placeholder{
+    color: lightgray;
+}
+
+label{
+    font-weight: bold;
+    font-family: Serif, Calibri;
+    font-size: 1.8rem;
+    font-style: italic;
+    text-align: left;
+    display: block;
+    position: relative;
+    left: 40rem;
+
+}
+
+label:hover{
+    color: gray;
+}
+
+
+select{
+    font-size: 1.5rem;
+    width: 22.9rem;
+    height: 2.5rem;
+    text-align: center;
+    position: relative;
+    left: 10.5rem;
+    top: -2.1rem;
+}
+
+select:hover{
+    border-color: black;
+}
+
+option{
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+option::selection{
+    background-color: green;
+}
+
+button{
+    width: 10rem;
+    height: 5.9rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: forestgreen;
+    color: white;
+    border-radius: 1rem;
+
+}
+
+button:hover{
+    background-color: green;
+}
+
+
