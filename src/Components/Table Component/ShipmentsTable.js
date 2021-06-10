@@ -35,7 +35,7 @@
         }
 
         getShipments = async () =>{
-            return await axios.get("http://localhost:8000/app/shipments/list/")
+            return await axios.get("http://localhost:8000/api/shipments/list/")
                 .then((response) =>{
                     /****** I get an error when the react axios cannot fetch data from api ****/
                         //Unhandled Rejection (TypeError): Cannot read property 'data' of undefined, at line this.setState(errorMessage : this.state.....)
@@ -86,6 +86,7 @@
                                 <button className="updateBtn" onClick={() => {
                                     const history = this.props.history;  //in class components we use props to refer to the history and location attributes of React Router, for function components we use useHistory()
                                     history.push('/shipping/request/update');
+
                                 }}>U</button>
                         </td>
                     </tr>
@@ -96,7 +97,7 @@
         deleteShipment = (id) =>{
             if(window.confirm("Are you sure you want to delete the shipment?")){
                 //calling the DELETE HTTP Verb / API endpoint
-                axios.delete(`http://localhost:8000/app/shipments/delete/${id}`)
+                axios.delete(`http://localhost:8000/api/shipments/delete/${id}`)
                     .then((response) =>{
                         let result = response.data;
                         console.log(result);

@@ -2,12 +2,15 @@
     box-sizing: border-box;
     font-family: "Times New Roman", Arial, SansSerif, Serif;
     font-size: 62.5%;
-    justify-content: left;
+    text-align: center;
+
 }
 
+body{
+    overflow-x: hidden;
+}
 
 h1{
-    font-family: "Times New Roman", Arial, SansSerif, Serif;
     font-size: 3rem;
     text-align: center;
     color: green;
@@ -16,20 +19,20 @@ h1{
 }
 
 input{
+    display: block;
     font-size: 2rem;
-    margin-left: 0.9rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.9rem;
-    padding-bottom: 0.9rem;
-    width: 23rem;
-    height: 2.3rem;
+    width: 21%;
+    height: 2.5rem;
     text-align: center;
     outline-color: black;
-    position: relative;
-    left: 10rem;
-    top: -2.4rem;
+    margin-left: auto;
+    margin-right: auto;
+    resize: both;
+    overflow: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
+
 
 input:hover{
     border-color: gray;
@@ -39,31 +42,28 @@ input:hover{
     color: lightgray;
 }
 
+
 label{
-    font-weight: bold;
-    font-family: Serif, Calibri;
-    font-size: 1.8rem;
-    font-style: italic;
-    text-align: left;
-    display: block;
     position: relative;
-    left: 40rem;
-
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
-
 label:hover{
     color: gray;
 }
 
 
 select{
-    font-size: 1.5rem;
-    width: 22.9rem;
+    font-size: 2rem;
+    width: 21%;
     height: 2.5rem;
-    text-align: center;
-    position: relative;
-    left: 10.5rem;
-    top: -2.1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 select:hover{
@@ -76,26 +76,21 @@ option{
 }
 
 option::selection{
+    color: white;
     background-color: green;
 }
+
 
 button{
-    width: 10rem;
-    height: 5.9rem;
-    margin-top: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    background-color: forestgreen;
-    color: white;
-    border-radius: 1rem;
-
+    width: 20%;
+    height: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
 }
 
-button:hover{
-    background-color: green;
+#errorMessageDisplayed{
+    font-size: 14px;
+    color: red;
 }
-
 

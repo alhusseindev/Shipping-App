@@ -1,36 +1,34 @@
 *{
     font-family: "Times New Roman", Arial, SansSerif, Serif;
     font-size: 62.5%;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 
 .topNav{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    min-height: 8vh;
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 5rem;
     background-color: #24252A;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    padding-top: 2rem;
-    width: 130rem;
 
 }
 
 
 .logo{
+    display: block;
     color: gray;
     letter-spacing: 1rem;
     font-size: 2rem;
     cursor: pointer;
-    text-decoration: none;
+    float: left;
     position: relative;
-    left: -7.8rem;
-    top: 0.15rem;
-    justify-content: center;
+    left: 1rem;
+    top: 0.5rem;
+    text-decoration-line: none;
     text-align: center;
 }
 

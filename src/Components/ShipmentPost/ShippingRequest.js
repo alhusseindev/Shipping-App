@@ -1,13 +1,15 @@
 import React from 'react';
 import './ShippingRequestStyles.css';
 import axios from 'axios';
-
+import { NavLink } from 'react-router-dom';
 
 class ShippingRequest extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             shipment: {
+                id: 0,
+                account_executive_code: "",
                 requestType: "Request Type",
                 customerName: "",
                 email: "",
@@ -20,44 +22,41 @@ class ShippingRequest extends React.Component{
                 weight: "",
                 declaredValue: "",
                 packageType: "Package Type",
-                scheduling: "Schedule"
+                scheduling: "Schedule",
+                date_submitted: `Month: ${new Date().getMonth()} - Day: ${new Date().getDate()} - Year: ${new Date().getFullYear()}`
             },
-            errorMessage : Array(),
+            errorMessage : "",
         };
 
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleFormSubmission = this.handleFormSubmission.bind(this);
-        this.submitRequest = this.submitRequest.bind(this);
     }
 
 
 
     submitRequest = (event) =>{
 
-        axios.post("http://localhost:8000/app/shipments/create/", this.state.shipment)
-            .then((response) =>{
-                let result = response.data;
-                console.log(result);
-            }).catch((error) =>{
-            this.setState({errorMessage: this.state.errorMessage.push(error.response.data.message)});
-            if(this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" ||  this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === ""){
-                this.setState({errorMessage: "Please make sure you fill the required fields!"});
+        if(this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" ||  this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === ""){
+            this.setState({errorMessage: "Please make sure you fill the required fields!"});
 
-            }
-            if(isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === ""){
-                this.setState({errorMessage: "Some fields must be Numeric"});
-            }
-            return(<div>{this.state.errorMessage}</div>);
+        }else if(isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === ""){
+            this.setState({errorMessage: "Some fields must be Numeric"});
+        }else {
+            axios.post("http://localhost:8000/api/shipments/create/", this.state.shipment)
+                .then((response) => {
+                    let result = response.data;
+                    console.log(result);
+                }).catch((error) => {
+                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
 
-        });
+            });
 
+            return (<div>{this.state.errorMessage}</div>);
+        }
     }
 
 
 
 
-    handleChange(event){
+    handleChange = (event) =>{
         //selecting shipment from the state
         const request = this.state.shipment;
         //updating the shipment keys and values
@@ -69,18 +68,62 @@ class ShippingRequest extends React.Component{
     }
 
 
-    handleFormSubmission(event){
+    handleFormSubmission = (event) =>{
         event.preventDefault();  //so the page doesn't send a request to the server when the form is submitted
 
         console.log("Submitted Successfully!");
         console.log(this.state.shipment);
     }
 
+
+    timeStamp = () =>{
+        var myDate = new Date();
+        let day = myDate.getDay();
+        let month = myDate.getMonth();
+        let year = myDate.getFullYear();
+        let fullDate = `Month: ${month} - Day: ${day} - Year: ${year}`
+        this.setState({date_submitted: fullDate});
+    }
+
+    updateShipment = (id) =>{
+        if(window.confirm("Are you sure you want to update the selected shipment ?")) {
+            axios.put(`http://localhost:8000/api/shipments/update/${id}`)
+                .then((response) => {
+                    let result = response.data;
+                    window.alert(`Shipment Number: ${id} was updated successfully!`);
+
+                }).catch((error) => {
+                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
+
+                /*
+                if (this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" || this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === "") {
+                    this.setState({errorMessage: error.response});
+
+                }
+                if (isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === "") {
+                    this.setState({errorMessage: error.response});
+                }
+                */
+
+                return (<div>{this.state.errorMessage}</div>);
+
+            });
+        }
+
+    }
+
+
+
+
     render() {
         return (
             <form className="parent-container" onSubmit={this.handleFormSubmission}>
 
-                <h1>Company Name's<br/> Shipping Department</h1>
+                <h1>Well Aliments<br/> Shipping Department</h1>
+                <br/>
+                <label htmlFor="salesperson_code">Account Executive Code:</label>
+                <input type="text" className="account_executive_code" name="account_executive_code" value={this.state.shipment.account_executive_code} onChange={this.handleChange} placeholder="Account Executive Code" />
+                <hr/>
                 <br/>
                 <label htmlFor="quoteOrLabel">Request Type: </label>
                 <select required className="requestType" name="requestType" value={this.state.shipment.requestType} onChange={this.handleChange} placeholder="Request Type">
@@ -138,11 +181,14 @@ class ShippingRequest extends React.Component{
                     <option value="Drop-Off">Drop-Off</option>
                 </select>
                  <br/>
+                 <label htmlFor="dateSubmitted" className="submissionDateLabel">Date Submitted:</label>
+                <input type="text" value={this.state.shipment.date_submitted} placeholder="Date Submitted (Auto)" className="date" disabled />
                 <hr/>
                 <div id="errorMessageDisplayed">
                     {this.state.errorMessage}
                 </div>
-                <button type="submit" className="submitShipment" onClick={this.submitRequest} onChange={this.handleChange}>Submit Shipping Request</button>
+                <button type="submit" className="submitShipment" onClick={() => this.submitRequest}>Submit Shipping Request</button>
+                {/** <button className="updateShipment" onClick={() => this.updateShipment(this.state.shipment.id)}>Update Shipment</button> */}
 
 
             </form>
