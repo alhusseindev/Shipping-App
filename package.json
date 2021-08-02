@@ -3,12 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.6.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.1",
+    "auth0-lock-passwordless": "^2.2.3",
     "axios": "^0.21.1",
+    "bootstrap": "^5.0.2",
+    "emailjs-com": "^3.2.0",
     "react": "^17.0.1",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "^17.0.1",
+    "react-hook-form": "^7.12.0",
+    "react-microsoft-login": "^1.15.0",
     "react-scripts": "^4.0.3",
     "web-vitals": "^1.1.0"
   },
@@ -37,6 +44,8 @@
     ]
   },
   "devDependencies": {
-    "react-router-dom": "^5.2.0"
+    "nodemailer": "^6.6.3",
+    "react-router-dom": "^5.2.0",
+    "two-step-auth": "^1.1.2"
   }
 }

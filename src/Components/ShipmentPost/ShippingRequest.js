@@ -1,7 +1,7 @@
 import React from 'react';
-import './ShippingRequestStyles.css';
+//import './ShippingRequestStyles.css';
+import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 
 class ShippingRequest extends React.Component{
     constructor(props){
@@ -43,9 +43,10 @@ class ShippingRequest extends React.Component{
             axios.post("http://localhost:8000/api/shipments/create/", this.state.shipment)
                 .then((response) => {
                     let result = response.data;
-                    console.log(result);
+                    //console.log(result);
                 }).catch((error) => {
-                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
+                    this.setState({errorMessage: ''});
+                    this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
 
             });
 
@@ -117,81 +118,81 @@ class ShippingRequest extends React.Component{
 
     render() {
         return (
-            <form className="parent-container" onSubmit={this.handleFormSubmission}>
+            <Form id="parent-container" onSubmit={this.handleFormSubmission} style={{marginLeft: '2rem', marginRight: '2rem'}}>
 
-                <h1>Well Aliments<br/> Shipping Department</h1>
+                <h1 style={{textAlign: 'center', color: 'green', fontFamily:"Times New Roman, Serif", fontWeight: 'bold'}}>Well Aliments<br/> Shipping Department</h1>
                 <br/>
-                <label htmlFor="salesperson_code">Account Executive Code:</label>
-                <input type="text" className="account_executive_code" name="account_executive_code" value={this.state.shipment.account_executive_code} onChange={this.handleChange} placeholder="Account Executive Code" />
+                <Form.Label htmlFor="salesperson_code">Account Executive Code:</Form.Label>
+                <Form.Control type="text" id="account_executive_code" name="account_executive_code" value={this.state.shipment.account_executive_code} onChange={this.handleChange} placeholder="Account Executive Code" />
                 <hr/>
                 <br/>
-                <label htmlFor="quoteOrLabel">Request Type: </label>
-                <select required className="requestType" name="requestType" value={this.state.shipment.requestType} onChange={this.handleChange} placeholder="Request Type">
+                <Form.Label htmlFor="quoteOrLabel">Request Type: </Form.Label>
+                <Form.Control as="select" required id="requestType" name="requestType" value={this.state.shipment.requestType} onChange={this.handleChange} placeholder="Request Type">
                     <option value="Request Type">Request Type</option>
                     <option value="Quote">Quote</option>
                     <option value="Label">Label</option>
-                </select>
+                </Form.Control>
                 <br/>
-                <label htmlFor="customerName">Customer Name: </label>
-                <input type="text" className="customerName" value={this.state.shipment.customerName} name="customerName" onChange={this.handleChange} placeholder="Customer Name" required/>
+                <Form.Label htmlFor="customerName">Customer Name: </Form.Label>
+                <Form.Control type="text" id="customerName" value={this.state.shipment.customerName} name="customerName" onChange={this.handleChange} placeholder="Customer Name" required/>
                 <br/>
-                <label htmlFor="email">Email: </label>
-                <input type="text" className="email" name="email" value={this.state.shipment.email} onChange={this.handleChange} placeholder="Email" required/>
+                <Form.Label htmlFor="email">Email: </Form.Label>
+                <Form.Control type="text" id="email" name="email" value={this.state.shipment.email} onChange={this.handleChange} placeholder="Email" required/>
                 <br/>
-                <label htmlFor="companyName">Company Name: </label>
-                <input type="text" className="companyName" value={this.state.shipment.companyName} name="companyName" onChange={this.handleChange} placeholder="Company Name"/>
+                <Form.Label htmlFor="companyName">Company Name: </Form.Label>
+                <Form.Control type="text" id="companyName" value={this.state.shipment.companyName} name="companyName" onChange={this.handleChange} placeholder="Company Name"/>
                 <br/>
-                <label htmlFor="originAddress">Address (Origin): </label>
-                <input type="text" className="originAddress" value={this.state.shipment.originAddress} name="originAddress" onChange={this.handleChange} placeholder="Address (Origin)" required/>
+                <Form.Label htmlFor="originAddress">Address (Origin): </Form.Label>
+                <Form.Control type="text" id="originAddress" value={this.state.shipment.originAddress} name="originAddress" onChange={this.handleChange} placeholder="Address (Origin)" required/>
                 <br/>
-                <label htmlFor="destinationAddress">Address (Destination):</label>
-                <input type="text" className="destinationAddress" value={this.state.shipment.destinationAddress} name="destinationAddress" onChange={this.handleChange} placeholder="Address (Destination)" required/>
+                <Form.Label htmlFor="destinationAddress">Address (Destination):</Form.Label>
+                <Form.Control type="text" id="destinationAddress" value={this.state.shipment.destinationAddress} name="destinationAddress" onChange={this.handleChange} placeholder="Address (Destination)" required/>
                 <br/>
-                <label htmlFor="phoneNumber">Phone Number: </label>
-                <input type="text" className="phoneNumber" value={this.state.shipment.phoneNumber} name="phoneNumber" onChange={this.handleChange} placeholder="Phone Number" required/>
+                <Form.Label htmlFor="phoneNumber">Phone Number: </Form.Label>
+                <Form.Control type="text" id="phoneNumber" value={this.state.shipment.phoneNumber} name="phoneNumber" onChange={this.handleChange} placeholder="Phone Number" required/>
                 <br/>
-                <label htmlFor="typeOfCommodity" id="typeOfCommodityLabel">Type of Commodity: </label>
-                <select className="typeOfCommodity" value={this.state.shipment.typeOfCommodity} name="typeOfCommodity" onChange={this.handleChange} placeholder="Type Of Commodity" required>
+                <Form.Label htmlFor="typeOfCommodity" id="typeOfCommodityLabel">Type of Commodity: </Form.Label>
+                <Form.Control as="select" id="typeOfCommodity" value={this.state.shipment.typeOfCommodity} name="typeOfCommodity" onChange={this.handleChange} placeholder="Type Of Commodity" required>
                     <option value="Type Of Commodity">Type Of Commodity</option>
                     <option value="Bottles">Bottles</option>
                     <option value="Boxes">Boxes</option>
                     <option value="Pallets">Pallets</option>
-                </select>
+                </Form.Control>
                 <br/>
-                <label htmlFor="noOfCommodities">Number Of Commodities: </label>
-                <input type="text" className="noOfCommodities" value={this.state.shipment.noOfCommodities} name="noOfCommodities" onChange={this.handleChange} placeholder="Number of Commodities" required/>
+                <Form.Label htmlFor="noOfCommodities">Number Of Commodities: </Form.Label>
+                <Form.Control type="text" id="noOfCommodities" value={this.state.shipment.noOfCommodities} name="noOfCommodities" onChange={this.handleChange} placeholder="Number of Commodities" required/>
                 <br/>
-                <label htmlFor="weight">Weight: </label>
-                <input type="text" className="weight" value={this.state.shipment.weight} name="weight" onChange={this.handleChange} placeholder="Weight" required/>
+                <Form.Label htmlFor="weight">Weight: </Form.Label>
+                <Form.Control type="text" id="weight" value={this.state.shipment.weight} name="weight" onChange={this.handleChange} placeholder="Weight" required/>
                 <br/>
-                <label htmlFor="declaredValue">Declared Value: </label>
-                <input type="text" className="declaredValue" value={this.state.shipment.declaredValue} name="declaredValue" onChange={this.handleChange} placeholder="Declared Value" />
+                <Form.Label htmlFor="declaredValue">Declared Value: </Form.Label>
+                <Form.Control type="text" id="declaredValue" value={this.state.shipment.declaredValue} name="declaredValue" onChange={this.handleChange} placeholder="Declared Value" />
                 <br/>
-                <label htmlFor="packageType">Package Type: </label>
-                <select className="packageType" value={this.state.shipment.packageType} name="packageType" onChange={this.handleChange} placeholder="Package Type" required>
+                <Form.Label htmlFor="packageType">Package Type: </Form.Label>
+                <Form.Control as="select" id="packageType" value={this.state.shipment.packageType} name="packageType" onChange={this.handleChange} placeholder="Package Type" required>
                     <option value="Package Type">Package Type</option>
                     <option value="Pallets">Pallets</option>
                     <option value="Boxes">Boxes</option>
-                </select>
+                </Form.Control>
                 <br/>
-                <label htmlFor="scheduling" className="schedulingLabel">Schedule: </label>
-                <select className="scheduling" value={this.state.shipment.scheduling} name="scheduling" onChange={this.handleChange} placeholder="Scheduling" required>
+                <Form.Label htmlFor="scheduling" className="schedulingLabel">Schedule: </Form.Label>
+                <Form.Control as="select" id="scheduling" value={this.state.shipment.scheduling} name="scheduling" onChange={this.handleChange} placeholder="Scheduling" required>
                     <option value="Schedule">Schedule</option>
                     <option value="Pick-up">Pick-Up</option>
                     <option value="Drop-Off">Drop-Off</option>
-                </select>
+                </Form.Control>
                  <br/>
-                 <label htmlFor="dateSubmitted" className="submissionDateLabel">Date Submitted:</label>
-                <input type="text" value={this.state.shipment.date_submitted} placeholder="Date Submitted (Auto)" className="date" disabled />
+                 <Form.Label htmlFor="dateSubmitted" className="submissionDateLabel">Date Submitted:</Form.Label>
+                <Form.Control type="text" id="dateSubmitted" value={this.state.shipment.date_submitted} placeholder="Date Submitted (Auto)" disabled />
                 <hr/>
                 <div id="errorMessageDisplayed">
                     {this.state.errorMessage}
                 </div>
-                <button type="submit" className="submitShipment" onClick={() => this.submitRequest}>Submit Shipping Request</button>
+                <Button type="submit" id="submitShipment" onClick={() => this.submitRequest} style={{marginBottom: '1.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}>Submit Shipping Request</Button>
                 {/** <button className="updateShipment" onClick={() => this.updateShipment(this.state.shipment.id)}>Update Shipment</button> */}
 
 
-            </form>
+            </Form>
         );
     }
 }

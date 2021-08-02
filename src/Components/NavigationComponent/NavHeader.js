@@ -1,26 +1,33 @@
 import React from 'react';
-import '../NavigationComponent/NavHeader.css';
+//import '../NavigationComponent/NavHeader.css';
+import { Navbar, Container } from 'react-bootstrap';
+
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import ShipmentsTable from "../Table Component/ShipmentsTable";
 import ShippingRequest from "../ShipmentPost/ShippingRequest";
+import ShipmentsTable from "../Table Component/ShipmentsTable";
 
-class NavHeader extends React.Component{
-    constructor(props){
-        super(props);
-    }
+function NavHeader(){
 
-    render(){
-        return(
-            <Router>
-                <nav className="topNav">
-                    <h5 className="logo"><a className="logo" href="https://wellaliments.com/">Well Aliments</a></h5>
-                </nav>
-                <Switch>
-                    <Route path="/shipping/request" component={ShippingRequest} />
-                </Switch>
-            </Router>
-        );
-    }
+    return(
+        <Router>
+            <Navbar className="bg-dark" style={{
+                height: '4rem',
+                marginBottom: '4rem'
+            }}>
+                <Container>
+                  <Navbar.Brand style={{
+                      color: 'white',
+                      fontFamily: 'Arial, SansSerif',
+                      fontSize: '1.5rem'
+                  }} href="https://wellaliments.com/" target="_blank">Well Aliments</Navbar.Brand>
+                </Container>
+            </Navbar>
+            <Switch>
+                <Route path="/shipping/request" component={ShippingRequest} />
+                <Route path="/shipping/request/list" component={ShipmentsTable} />
+            </Switch>
+        </Router>
+    );
 
 }
 
