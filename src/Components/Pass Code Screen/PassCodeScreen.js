@@ -8,8 +8,8 @@ class PassCodeScreen extends React.Component{
         super(props);
         this.state = {
             passAccount: {
-                email: "Email",
-                password: "Password"
+                email: "",
+                password: ""
             },
             errorMessage: ''
         };
@@ -22,7 +22,7 @@ class PassCodeScreen extends React.Component{
             .then((response) => {
                 let result = response.data;
             }).catch((error) =>{
-                this.setState({errorMessage: ''});
+                this.setState({errorMessage: `${error}`});
             });
 
         console.log(`submitRequest email: `, this.state.passAccount.email);
@@ -30,15 +30,10 @@ class PassCodeScreen extends React.Component{
 
     handleChange = (event) =>{
         console.log(`input detected`);
-        let request = Object.assign({},this.state.passAccount);
-        request.email = event.target.value;
-        request.password = event.target.value;
-        this.setState({passAccount: request});
+        const {name, value} = event.target;
+        this.setState({passAccount: {...this.state.passAccount, [name]:value} });
      }
 
-     confirmPassword = (password) =>{
-        axios.get()
-     }
 
 
     handleSubmit = (event) =>{
@@ -47,6 +42,37 @@ class PassCodeScreen extends React.Component{
     }
 
 
+    confirmPassCode = async (email) =>{
+        let result;
+        let stateEmail;
+        try {
+            result = await axios.get(`http://localhost:5000/otp/findbyemail/${email}`);
+
+            stateEmail = this.state.passAccount
+            stateEmail.email = email;
+            this.setState({stateEmail});
+
+            console.log('Email: ' + email);
+            console.log('pass code: ' + this.state.passAccount.password);
+
+            if(this.state.passAccount.password === result.data.OTPCode){
+                console.log(`Permisson Granted!`);
+                this.setState({errorMessage: ""});
+                this.setState({errorMessage: "Permisson Granted!"});
+
+                //Redirect to the form
+
+
+            }else{
+                console.log(`Permisson Denied!`);
+                this.setState({errorMessage:""});
+                this.setState({errorMessage:"Permisson Denied!"});
+            }
+        }catch(error){
+            this.state.errorMessage = "";
+            this.state.errorMessage.concat(`Error: ${error}`);
+        }
+    }
     
 
 
@@ -66,16 +92,17 @@ class PassCodeScreen extends React.Component{
                 <br/>
                 <Form.Group style={{marginBottom: '0.5rem'}}>
                     <Form.Label>Email Address</Form.Label>
-                    <Form.Control type="text" value={this.state.email} onChange={this.handleChange} placeholder="Enter Email Address" style={{width: '25rem'}}/>
+                    <Form.Control type="text" value={this.state.passAccount.email} onChange={this.handleChange} placeholder="Enter Email Address" style={{width: '25rem'}} name="email"/>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="text" value={this.state.passcode} onChange={this.handleChange} placeholder="Enter One Time Password" style={{width: '25rem'}}/>
+                    <Form.Control type="password" value={this.state.passAccount.password} onChange={this.handleChange} placeholder="Enter One Time Password" style={{width: '25rem'}} name="password" />
                 </Form.Group>
 
                 {/** this.state.showElement === true ? this.onOTPClick : null */}
                 <hr style={{width: '25rem'}}/>
-                <div>{this.state.errorMessage}</div>
+                <div style={{textAlign: 'center'}}>{this.state.errorMessage}</div>
+                <br/>
                 {/**this.state.errorMessage.concat("Please check your email, to access the portal using the link sent.") */}
                 <Button type="submit" style={{
                     display: 'block',
@@ -92,7 +119,7 @@ class PassCodeScreen extends React.Component{
                     width: '10.5rem',
                     height: '2.5rem',
                     marginBottom: '2rem'
-                }}>
+                }} onClick={() => this.confirmPassCode(String(this.state.passAccount.email))}>
                     Sign In</Button>
             </Form>
         );
