@@ -1,6 +1,7 @@
 import React from 'react';
 //import './ShipmentsTable.css';
 import axios from "axios";
+import { withRouter } from 'react-router-dom';
 import { Table, Button } from 'react-bootstrap';
 
 
@@ -11,19 +12,20 @@ class ShipmentsTable extends React.Component{
             shipments: [
                 {
                     id: 0,
-                    requestType: "Request Type",
+                    account: "",
+                    requestType: "",
                     customerName: "",
                     email: "",
                     companyName: "",
                     originAddress: "",
                     destinationAddress: "",
                     phoneNumber: "",
-                    typeOfCommodity: "Type Of Commodity",
+                    typeOfCommodity: "",
                     noOfCommodities: "",
                     weight: "",
                     declaredValue: "",
-                    packageType: "Package Type",
-                    scheduling: "Schedule"
+                    packageType: "",
+                    scheduling: ""
                 },
             ],
             errorMessage: ""
@@ -31,22 +33,24 @@ class ShipmentsTable extends React.Component{
 
     }
 
-    getShipments = () =>{
-        axios.get("http://localhost:8000/api/shipments/list/")
-            .then((response) =>{
-                /****** I get an error when the react axios cannot fetch data from api ****/
+    getShipments = async () =>{
+        try {
+            let fetchedShipments = await axios.get("http://localhost:8000/api/shipments/list/")
+            /****** I get an error when the react axios cannot fetch data from api ****/
                 //Unhandled Rejection (TypeError): Cannot read property 'data' of undefined, at line this.setState(errorMessage : this.state.....)
-                if(undefined || null) {
-                    return(<div>Loading Data!</div>);
-                }
 
-                let result = response.data;
+            let result = fetchedShipments.data;
+            if(result === undefined){
+                this.setState({errorMessage: ""});
+                this.setState({errorMessage:`Getting undefined from Fetched Shipments`});
+            }else {
                 this.setState({shipments: result});
-
-            }).catch((error) =>{
-                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.messages)});
-                return(<div>{this.state.errorMessage}</div>)
-            });
+            }
+        }catch(error){
+            this.setState({errorMessage: ""});
+            this.setState({errorMessage: `${error.data}`});
+            return(<div>{this.state.errorMessage}</div>)
+        }
 
     }
 
@@ -57,9 +61,10 @@ class ShipmentsTable extends React.Component{
     }
 
 
-    addRow = ({id, requestType, customerName, email, companyName, originAddress, destinationAddress, phoneNumber, typeOfCommodity, noOfCommodities, weight, declaredValue, packageType, scheduling}) => {
+    addRow = ({id, account, requestType, customerName, email, companyName, originAddress, destinationAddress, phoneNumber, typeOfCommodity, noOfCommodities, weight, declaredValue, packageType, scheduling}) => {
         return (
                 <tr className="resultsFetched" key={id} style={{ marginLeft: '0.5rem', marginRight: '0.5rem'}}>
+                    <td>{account}</td>
                     <td>{requestType}</td>
                     <td>{customerName}</td>
                     <td>{email}</td>
@@ -81,28 +86,28 @@ class ShipmentsTable extends React.Component{
                             window.alert(`Shipment Number: ${id} Was Deleted Successfully`);
                         }}>X</Button>
 
+                        {/**
+                        <Button className="updateBtn" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '0.3rem', marginBottom: '0.3rem'}} onClick={() => {
+                            const history = this.props.history;  //in class components we use props to refer to the history and location attributes of React Router, for function components we use useHistory()
+                            history.push('/shipping/request/update');
 
-                            <Button className="updateBtn" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '0.3rem', marginBottom: '0.3rem'}} onClick={() => {
-                                const history = this.props.history;  //in class components we use props to refer to the history and location attributes of React Router, for function components we use useHistory()
-                                history.push('/shipping/request/update');
-
-                            }}>U</Button>
+                        }}>U</Button>     */}
                     </td>
                 </tr>
         );
     };
 
 
-    deleteShipment = (id) =>{
+    deleteShipment = async (id) =>{
         if(window.confirm("Are you sure you want to delete the shipment?")){
-            //calling the DELETE HTTP Verb / API endpoint
-            axios.delete(`http://localhost:8000/api/shipments/delete/${id}`)
-                .then((response) =>{
-                    let result = response.data;
-                    //console.log(result);
-                }).catch((error) =>{
-                    this.setState({errorMessage: this.state.shipments.errorMessage.concat(error.response.data.messages)});
-            });
+            try {
+                //calling the DELETE HTTP Verb / API endpoint
+                let deleteData = await axios.delete(`http://localhost:8000/api/shipments/delete/${id}`);
+                let result = deleteData.data;
+            }catch(error){
+                this.setState({errorMessage: ""});
+                this.setState({errorMessage: error.data});
+            }
         }
     }
 
@@ -111,13 +116,11 @@ class ShipmentsTable extends React.Component{
         return(
             <Table className="submittedShipmentsTable" striped bordered hover responsive style={{ width: '100%'}}>
                 <thead>
-                    <h1 style={{position: 'absolute', left: '30%'}}>Well Aliments Shipments Queue</h1>
-                    <br/>
-                    <br/>
+                    <h1 style={{display: 'block', marginBottom: '2rem', textAlign: 'center'}}>Well Aliments Shipments Queue</h1>
                     <br/>
                     <br/>
                     <tr id="myTableHeader">
-
+                            <th>Account</th>
                             <th>Request Type</th>
                             <th>Customer Name</th>
                             <th>Email</th>

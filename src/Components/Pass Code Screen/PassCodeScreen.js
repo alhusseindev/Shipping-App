@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -11,7 +12,8 @@ class PassCodeScreen extends React.Component{
                 email: "",
                 password: ""
             },
-            errorMessage: ''
+            errorMessage: "",
+            authenticated: false
         };
     }
 
@@ -35,6 +37,21 @@ class PassCodeScreen extends React.Component{
      }
 
 
+    authenticatedRoute = () =>{
+       if(this.state.authenticated === true) {
+            let history = this.props.history;
+            let myPassAccount = this.state.passAccount;
+            //history.replace({pathname: "/shipping/request", state: {myPassAccount}});
+            history.push({pathname: "/shipping/request/list", state:{myPassAccount}});
+            console.log(history);
+       }else{
+           /**let history = this.props.history;
+           let myPassAccount = this.state.passAccount;
+           history.replace({pathname: "/", state:{myPassAccount}}); */
+           return(<Redirect to="/" />);
+       }
+    }
+
 
     handleSubmit = (event) =>{
         console.log(`Form Submitted Successfully`);
@@ -45,6 +62,7 @@ class PassCodeScreen extends React.Component{
     confirmPassCode = async (email) =>{
         let result;
         let stateEmail;
+
         try {
             result = await axios.get(`http://localhost:5000/otp/findbyemail/${email}`);
 
@@ -55,19 +73,29 @@ class PassCodeScreen extends React.Component{
             console.log('Email: ' + email);
             console.log('pass code: ' + this.state.passAccount.password);
 
-            if(this.state.passAccount.password === result.data.OTPCode){
+
+            let verification = await axios.get(`http://localhost:5000/otp/verify/${this.state.passAccount.password}`);
+
+            if(this.state.passAccount.email === verification.data.Email && this.state.passAccount.password === result.data.OTPCode){
                 console.log(`Permisson Granted!`);
+                this.setState({authenticated:true});
                 this.setState({errorMessage: ""});
                 this.setState({errorMessage: "Permisson Granted!"});
+                //this.setState({errorMessage: ""});
+                //this.setState({errorMessage: `${result.data}`});
 
                 //Redirect to the form
+                this.authenticatedRoute();
 
 
             }else{
                 console.log(`Permisson Denied!`);
+
                 this.setState({errorMessage:""});
                 this.setState({errorMessage:"Permisson Denied!"});
+                //this.setState({errorMessage: `${result.data.ErrorMessage}`})
             }
+
         }catch(error){
             this.state.errorMessage = "";
             this.state.errorMessage.concat(`Error: ${error}`);
@@ -119,12 +147,13 @@ class PassCodeScreen extends React.Component{
                     width: '10.5rem',
                     height: '2.5rem',
                     marginBottom: '2rem'
-                }} onClick={() => this.confirmPassCode(String(this.state.passAccount.email))}>
+                }} onClick={() => {
+                    this.confirmPassCode(String(this.state.passAccount.email));
+                }}>
                     Sign In</Button>
             </Form>
         );
     }
 }
-
 
 export default PassCodeScreen;

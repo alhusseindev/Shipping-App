@@ -9,7 +9,6 @@ class ShippingRequest extends React.Component{
         this.state = {
             shipment: {
                 id: 0,
-                account_executive_code: "",
                 requestType: "Request Type",
                 customerName: "",
                 email: "",
@@ -46,7 +45,7 @@ class ShippingRequest extends React.Component{
                     //console.log(result);
                 }).catch((error) => {
                     this.setState({errorMessage: ''});
-                    this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
+                    this.setState({errorMessage: error.response.data.message});
 
             });
 
@@ -59,11 +58,9 @@ class ShippingRequest extends React.Component{
 
     handleChange = (event) =>{
         //selecting shipment from the state
-        const request = this.state.shipment;
-        //updating the shipment keys and values
-        request[event.target.name]= event.target.value;
+        const  {name, value} = event.target;
         //setting the state
-        this.setState({shipment: request});
+        this.setState({shipment: { ...this.state.shipment, [name]: value }});
         console.log("Input change detected");
 
     }
@@ -121,10 +118,6 @@ class ShippingRequest extends React.Component{
             <Form id="parent-container" onSubmit={this.handleFormSubmission} style={{marginLeft: '2rem', marginRight: '2rem'}}>
 
                 <h1 style={{textAlign: 'center', color: 'green', fontFamily:"Times New Roman, Serif", fontWeight: 'bold'}}>Well Aliments<br/> Shipping Department</h1>
-                <br/>
-                <Form.Label htmlFor="salesperson_code">Account Executive Code:</Form.Label>
-                <Form.Control type="text" id="account_executive_code" name="account_executive_code" value={this.state.shipment.account_executive_code} onChange={this.handleChange} placeholder="Account Executive Code" />
-                <hr/>
                 <br/>
                 <Form.Label htmlFor="quoteOrLabel">Request Type: </Form.Label>
                 <Form.Control as="select" required id="requestType" name="requestType" value={this.state.shipment.requestType} onChange={this.handleChange} placeholder="Request Type">
