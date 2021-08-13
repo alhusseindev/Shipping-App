@@ -116,7 +116,6 @@ class ShippingRequest extends React.Component{
     render() {
         return (
             <Form id="parent-container" onSubmit={this.handleFormSubmission} style={{marginLeft: '2rem', marginRight: '2rem'}}>
-
                 <h1 style={{textAlign: 'center', color: 'green', fontFamily:"Times New Roman, Serif", fontWeight: 'bold'}}>Well Aliments<br/> Shipping Department</h1>
                 <br/>
                 <Form.Label htmlFor="quoteOrLabel">Request Type: </Form.Label>

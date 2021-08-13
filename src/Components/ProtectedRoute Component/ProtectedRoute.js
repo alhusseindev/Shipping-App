@@ -7,12 +7,31 @@ import { Route, Redirect } from 'react-router-dom';
  * @param Component: component to be rendered
  * @param ...rest
  */
-const ProtectedRoute = ({authenticated, component: Component, ...rest}) =>{
+
+
+/***
+ const ProtectedRoute = ({authenticated, component: Component, ...rest}) =>{
     return(
         <Route {...rest} render={(props) =>{
             //if auth === true
             if(authenticated){
                 return(<Component {...props} />);
+            }
+
+            if(!authenticated){
+                return(<Redirect to={{path: "/", state:{from: props.location}}} />);
+            }
+        }} />
+    );
+};
+ */
+const ProtectedRoute = ({authenticated, component: Component, ...rest}) =>{
+    return(
+        <Route {...rest} render={(props) =>{
+            //if auth === true
+            if(authenticated){
+                //adding {...rest} fixed the problem
+                return(<Component {...rest} {...props} />);
             }
 
             if(!authenticated){
