@@ -34,30 +34,6 @@ class ShippingRequest extends React.Component{
 
 
 
-    submitRequest = () =>{
-
-        if(this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" ||  this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === ""){
-            this.setState({errorMessage: "Please make sure you fill the required fields!"});
-
-        }else if(isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === ""){
-            this.setState({errorMessage: "Some fields must be Numeric"});
-        }else {
-            axios.post("http://localhost:8000/api/shipments/create/", this.state.shipment)
-                .then((response) => {
-                    let result = response.data;
-                    //console.log(result);
-                }).catch((error) => {
-                    this.setState({errorMessage: ''});
-                    this.setState({errorMessage: `${error}`});
-
-            });
-
-            //return (<div>{this.state.errorMessage}</div>);
-        }
-    }
-
-
-
 
     handleChange = (event) =>{
         //selecting shipment from the state
@@ -87,7 +63,8 @@ class ShippingRequest extends React.Component{
     }
 
     updateShipment = (id) =>{
-        if(window.confirm("Are you sure you want to update the selected shipment ?")) {
+        let confirmation = window.confirm("Are you sure you want to update the selected shipment ?");
+        if(confirmation) {
             axios.put(`http://localhost:8000/api/shipments/update/${id}/`)
                 .then((response) => {
                     let result = response.data;
@@ -176,14 +153,14 @@ class ShippingRequest extends React.Component{
                     <option value="Pick-up">Pick-Up</option>
                     <option value="Drop-Off">Drop-Off</option>
                 </Form.Control>
-                 <br/>
-                 <Form.Label htmlFor="dateSubmitted" className="submissionDateLabel">Date Submitted:</Form.Label>
+                <br/>
+                <Form.Label htmlFor="dateSubmitted" className="submissionDateLabel">Date Submitted:</Form.Label>
                 <Form.Control type="text" id="dateSubmitted" value={this.state.shipment.date_submitted} placeholder="Date Submitted (Auto)" disabled />
                 <hr/>
                 <div id="errorMessageDisplayed">
                     {this.state.errorMessage}
                 </div>
-                <Button type="submit" id="submitShipment" onClick={() => this.submitRequest()} style={{marginBottom: '1.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}>Submit Shipping Request</Button>
+                <Button type="submit" id="submitShipment" onClick={() => this.updateShipment(this.state.shipment.id)} style={{marginBottom: '1.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}>Submit Shipping Request</Button>
 
 
             </Form>

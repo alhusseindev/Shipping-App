@@ -5,8 +5,8 @@ import NavHeader from './Components/NavigationComponent/NavHeader';
 import ProtectedRoute from "./Components/ProtectedRoute Component/ProtectedRoute";
 import ShippingRequest from "./Components/ShipmentPost/ShippingRequest";
 import ShipmentsTable from "./Components/Table Component/ShipmentsTable";
-
-import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import UpdateShipmentRequest from './Components/UpdateShipment/UpdateShipmentRequest';
+import { BrowserRouter as Router, Switch} from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import {Button, Form} from "react-bootstrap";
 
@@ -20,18 +20,19 @@ class App extends React.Component{
                 password: ""
             },
             errorMessage: "",
+            token: "",
             authenticated: false
         };
     }
 
 
-    submitRequest = (event) =>{
+    generateOTP = (email) =>{
         //this.state.passAccount.email === 'Email' ? this.setState({errorMessage:'Please enter a valid email'}) : axios.post(`http://localhost:5000/otp/generate-passcode/${this.state.passAccount.email.toString()}`, this.state.passAccount)
-        axios.post(`http://localhost:5000/otp/generate-passcode/${String(this.state.passAccount.email)}`)
+        axios.post(`http://localhost:5000/otp/generate-passcode`, {email})
             .then((response) => {
                 let result = response.data;
             }).catch((error) =>{
-            this.setState({errorMessage: `${error}`});
+                this.setState({errorMessage: `${error}`});
         });
 
         console.log(`submitRequest email: `, this.state.passAccount.email);
@@ -45,6 +46,7 @@ class App extends React.Component{
 
 
     authenticatedRoute = () =>{
+        //if user has the JWT token if(this.state.token)
         if(this.state.authenticated === true) {
             let history = this.props.history;
             let myPassAccount = this.state.passAccount;
@@ -68,32 +70,39 @@ class App extends React.Component{
 
     confirmPassCode = async (email) =>{
         let result;
-        let stateEmail;
-
+        let stateAccount;
+        let authToken;
         try {
             //confirming passcode
-            result = await axios.get(`http://localhost:5000/otp/findbyemail/${email}`);
+            result = await axios.post(`http://localhost:5000/otp/findbyemail`, {email});
 
-            stateEmail = this.state.passAccount
-            stateEmail.email = email;
-            this.setState({stateEmail});
+            stateAccount = this.state.passAccount
+            stateAccount.email = email;
+            this.setState({stateAccount});
+
+            authToken = result.data.accessToken;
+            this.setState({token:authToken});
 
 
-            console.log('Email: ' + email);
-            console.log('pass code: ' + this.state.passAccount.password);
 
-            //verify that the passcode and email are the correct ones{email:passcode} (confirming email)
-            //let verification = await axios.get(`http://localhost:5000/otp/verify/${this.state.passAccount.password}`);
 
-            //NOTE: I replace verification.data.Email with the request.data.Email
-            //Will need to test it
-            if(this.state.passAccount.email === result.data.Email && this.state.passAccount.password === result.data.OTPCode){
+
+            //console.log('authToken: ' + this.state.token);
+            //console.log('Email: ' + email);
+            //console.log('pass code: ' + this.state.passAccount.password);
+
+
+            if(this.state.passAccount.email === result.data.Email && this.state.passAccount.password === result.data.OTPCode && this.state.token === authToken ){
                 console.log(`Permisson Granted!`);
                 this.setState({authenticated:true});
                 this.setState({errorMessage: ""});
                 this.setState({errorMessage: "Permisson Granted!"});
 
-                //this.setState({errorMessage: ""});
+
+                /** Test these 2 lines */
+                //localStorage.setItem("email", this.state.passAccount.email);
+                //localStorage.setItem("accessToken", this.state.token);
+
                 //this.setState({errorMessage: `${result.data}`});
                 this.authenticatedRoute();
 
@@ -101,13 +110,12 @@ class App extends React.Component{
 
             }else{
                 console.log(`Permisson Denied!`);
-                this.setState({errorMessage:"Permisson Denied!"});
-                //this.setState({errorMessage: `${result.data.ErrorMessage}`})
+                this.setState({errorMessage:"Permission Denied!"});
             }
 
+
         }catch(error){
-            this.state.errorMessage = "";
-            this.state.errorMessage.concat(`Error: ${error}`);
+            this.setState({errorMessage: `${error}`});
         }
     }
 
@@ -138,7 +146,8 @@ class App extends React.Component{
 
                     {/** this.state.showElement === true ? this.onOTPClick : null */}
                     <hr style={{width: '25rem'}}/>
-                    <div style={{textAlign: 'center'}}>{this.state.errorMessage}</div>
+                    <div style={{textAlign: 'center'}}>
+                        {this.state.errorMessage}</div>
                     <br/>
                     {/**this.state.errorMessage.concat("Please check your email, to access the portal using the link sent.") */}
                     <Button type="submit" style={{
@@ -148,7 +157,7 @@ class App extends React.Component{
                         marginBottom: '0.5rem',
                         width: '10.5rem',
                         height: '2.5rem'
-                    }} onClick={() => this.submitRequest()}>Get OTP</Button>
+                    }} onClick={() => this.generateOTP(String(this.state.passAccount.email))}>Get OTP</Button>
                     <Button type="submit" style={{
                         display: 'block',
                         marginLeft: 'auto',
@@ -178,7 +187,8 @@ class App extends React.Component{
             <Switch>
                 {/** It does not redirect to the page when using ProtectedRoute component */}
                 <ProtectedRoute path="/shipping/request" exact component={ShippingRequest} authenticated={this.state.authenticated}   />
-                <ProtectedRoute path="/shipments/list" exact component={ShipmentsTable} authenticated={this.state.authenticated}  />
+                <ProtectedRoute path="/shipments/list" exact component={ShipmentsTable} authenticated={this.state.authenticated} passAccount={this.state.passAccount}  />  {/** for the other object to get the email directly, I could do this.state.passAccount.email}, but I want to get the whole object and access it there. */}
+                <ProtectedRoute path="/shipping/request/update" exact component={UpdateShipmentRequest} authenticated={this.state.authenticated} />
             </Switch>
         </Router>
         );
