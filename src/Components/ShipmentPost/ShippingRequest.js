@@ -42,7 +42,7 @@ class ShippingRequest extends React.Component{
         }else if(isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === ""){
             this.setState({errorMessage: "Some fields must be Numeric"});
         }else {
-            axios.post("http://localhost:8000/api/shipments/create/", this.state.shipment)
+            axios.post("http://localhost:8000/api/shipments/create/", this.state.shipment, {headers: {accessToken: this.props.token}})
                 .then((response) => {
                     let result = response.data;
                     //console.log(result);
@@ -52,7 +52,6 @@ class ShippingRequest extends React.Component{
 
             });
 
-            //return (<div>{this.state.errorMessage}</div>);
         }
     }
 
@@ -84,33 +83,6 @@ class ShippingRequest extends React.Component{
         let year = myDate.getFullYear();
         let fullDate = `Month: ${month} - Day: ${day} - Year: ${year}`
         this.setState({date_submitted: fullDate});
-    }
-
-    updateShipment = (id) =>{
-        if(window.confirm("Are you sure you want to update the selected shipment ?")) {
-            axios.put(`http://localhost:8000/api/shipments/update/${id}/`)
-                .then((response) => {
-                    let result = response.data;
-                    window.alert(`Shipment Number: ${id} was updated successfully!`);
-
-                }).catch((error) => {
-                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
-
-                /*
-                if (this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" || this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === "") {
-                    this.setState({errorMessage: error.response});
-
-                }
-                if (isNaN(this.state.shipment.phoneNumber) || isNaN(this.state.shipment.noOfCommodities) || isNaN(this.state.shipment.weight) || isNaN(this.state.shipment.declaredValue) || this.state.shipment.phoneNumber || this.state.shipment.noOfCommodities === "" || this.state.shipment.weight === "" || this.state.shipment.declaredValue === "") {
-                    this.setState({errorMessage: error.response});
-                }
-                */
-
-                return (<div>{this.state.errorMessage}</div>);
-
-            });
-        }
-
     }
 
 

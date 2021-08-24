@@ -64,14 +64,14 @@ class ShippingRequest extends React.Component{
 
     updateShipment = (id) =>{
         let confirmation = window.confirm("Are you sure you want to update the selected shipment ?");
-        if(confirmation) {
-            axios.put(`http://localhost:8000/api/shipments/update/${id}/`)
-                .then((response) => {
-                    let result = response.data;
-                    window.alert(`Shipment Number: ${id} was updated successfully!`);
-
-                }).catch((error) => {
-                this.setState({errorMessage: this.state.errorMessage.concat(error.response.data.message)});
+        try {
+            axios({
+                method: 'PATCH',
+                url: `http://localhost:8000/api/shipments/update/${id}/`,
+                headers: {
+                    accessToken: this.props.token
+                }
+            });
 
                 /*
                 if (this.state.shipment.requestType.value === "Request Type" || this.state.shipment.typeOfCommodity.value === "Type Of Commodity" || this.state.shipment.packageType.value === "Package Type" || this.state.shipment.scheduling.value === "Schedule" || this.state.shipment.customerName.value === "" || this.state.shipment.email.value === "" || this.state.shipment.originAddress.value === "" || this.state.shipment.destinationAddress.value === "") {
@@ -83,9 +83,9 @@ class ShippingRequest extends React.Component{
                 }
                 */
 
-                return (<div>{this.state.errorMessage}</div>);
 
-            });
+        }catch(error){
+            this.setState({errorMessage: `${error}`});
         }
 
     }
@@ -160,7 +160,7 @@ class ShippingRequest extends React.Component{
                 <div id="errorMessageDisplayed">
                     {this.state.errorMessage}
                 </div>
-                <Button type="submit" id="submitShipment" onClick={() => this.updateShipment(this.state.shipment.id)} style={{marginBottom: '1.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}>Submit Shipping Request</Button>
+                <Button type="submit" id="submitShipment" onClick={() => this.updateShipment(this.state.shipment.id)} style={{marginBottom: '1.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}>Update Shipping Request</Button>
 
 
             </Form>

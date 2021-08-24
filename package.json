@@ -48,6 +48,7 @@
   "devDependencies": {
     "nodemailer": "^6.6.3",
     "react-router-dom": "^5.2.0",
-    "two-step-auth": "^1.1.2"
+    "two-step-auth": "^1.1.2",
+    "universal-cookie": "^4.0.4"
   }
 }

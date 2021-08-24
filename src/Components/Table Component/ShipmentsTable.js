@@ -1,7 +1,7 @@
 import React from 'react';
 //import './ShipmentsTable.css';
 import axios from "axios";
-import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Table, Button } from 'react-bootstrap';
 
 
@@ -39,7 +39,9 @@ class ShipmentsTable extends React.Component{
     listShipments = async () =>{
 
         try {
-            let fetchedShipments = await axios.get("http://localhost:8000/api/shipments/list/");
+            //, {headers: {accessToken: this.props.token, "Access-Control-Allow-Headers" : '*', "Access-Control-Allow-Origin" : '*', "Access-Control-Allow-Methods" : '*', "Access-Control-Allow-Credentials" : 'true' }}
+            let fetchedShipments = await axios.get("http://localhost:8000/api/shipments/list/", {headers:{accessToken:this.props.token}});
+
             /****** I get an error when the react axios cannot fetch data from api ****/
                 //Unhandled Rejection (TypeError): Cannot read property 'data' of undefined, at line this.setState(errorMessage : this.state.....)
 
@@ -50,6 +52,7 @@ class ShipmentsTable extends React.Component{
             }else {
                 this.setState({shipments: result});
             }
+
         }catch(error){
             this.setState({errorMessage: ""});
             this.setState({errorMessage: `${error}`});
@@ -64,10 +67,13 @@ class ShipmentsTable extends React.Component{
         try {
             //App.js
             //if(this.props.passAccount.authenticated === true) {
-                let fetchedShipments = await axios.get(`http://localhost:8000/api/users/account/${String(emailToQueryBy)}/shipments/`);
+                console.log("token: " + this.props.token);
+                let fetchedShipments = await axios.get(`http://localhost:8000/api/users/account/${String(emailToQueryBy)}/shipments/`, {headers:{accessToken:this.props.token}});
                 let result = fetchedShipments.data;
                 console.log(result);
                 this.setState({shipments: result});
+
+
             //}
         }catch(error){
             this.setState({errorMessage: `${error}`});
@@ -125,7 +131,7 @@ class ShipmentsTable extends React.Component{
         if(window.confirm("Are you sure you want to delete the shipment?")){
             try {
                 //calling the DELETE HTTP Verb / API endpoint
-                let deleteData = await axios.delete(`http://localhost:8000/api/shipments/delete/${id}/`);
+                let deleteData = await axios.delete(`http://localhost:8000/api/shipments/delete/${id}/`, {headers:{accessToken:this.props.token}});
                 let result = deleteData.data;
             }catch(error){
                 this.setState({errorMessage: ""});

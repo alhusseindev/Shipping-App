@@ -31,6 +31,7 @@ class App extends React.Component{
         axios.post(`http://localhost:5000/otp/generate-passcode`, {email})
             .then((response) => {
                 let result = response.data;
+                this.setState({errorMessage: "Code Sent To Email!"});
             }).catch((error) =>{
                 this.setState({errorMessage: `${error}`});
         });
@@ -45,22 +46,6 @@ class App extends React.Component{
     }
 
 
-    authenticatedRoute = () =>{
-        //if user has the JWT token if(this.state.token)
-        if(this.state.authenticated === true) {
-            let history = this.props.history;
-            let myPassAccount = this.state.passAccount;
-            //history.replace({pathname: "/shipping/request", state: {myPassAccount}});
-            history.push({pathname: "/shipments/list", state: {myPassAccount}});
-            console.log(history);
-        }else{
-            /**let history = this.props.history;
-             let myPassAccount = this.state.passAccount;
-             history.replace({pathname: "/", state:{myPassAccount}}); */
-            return(<Redirect to="/" />);
-        }
-    }
-
 
     handleSubmit = (event) =>{
         console.log(`Form Submitted Successfully`);
@@ -68,56 +53,72 @@ class App extends React.Component{
     }
 
 
-    confirmPassCode = async (email) =>{
+    confirmPassCode = async (email) => {
         let result;
         let stateAccount;
         let authToken;
         try {
             //confirming passcode
-            result = await axios.post(`http://localhost:5000/otp/findbyemail`, {email});
+            result = await axios.post(`http://localhost:5000/otp/findbyemail`, {email}, {withCredentials: true});
 
             stateAccount = this.state.passAccount
             stateAccount.email = email;
             this.setState({stateAccount});
 
-            authToken = result.data.accessToken;
-            this.setState({token:authToken});
 
+            console.log(result);
 
-
-
-
-            //console.log('authToken: ' + this.state.token);
-            //console.log('Email: ' + email);
-            //console.log('pass code: ' + this.state.passAccount.password);
-
-
-            if(this.state.passAccount.email === result.data.Email && this.state.passAccount.password === result.data.OTPCode && this.state.token === authToken ){
+            if (this.state.passAccount.email === result.data.Email && this.state.passAccount.password === result.data.OTPCode) {
                 console.log(`Permisson Granted!`);
-                this.setState({authenticated:true});
                 this.setState({errorMessage: ""});
                 this.setState({errorMessage: "Permisson Granted!"});
 
-
-                /** Test these 2 lines */
-                //localStorage.setItem("email", this.state.passAccount.email);
-                //localStorage.setItem("accessToken", this.state.token);
-
-                //this.setState({errorMessage: `${result.data}`});
-                this.authenticatedRoute();
+                /*** The following line needs to be fixed */
+                authToken = result.headers["accessToken"];
+                console.log(authToken);
+                this.setState({token: authToken});
 
 
+                this.addCookies();
 
-            }else{
+
+            } else {
                 console.log(`Permisson Denied!`);
-                this.setState({errorMessage:"Permission Denied!"});
+                this.setState({errorMessage: "Permission Denied!"});
             }
 
+            let myCookie = document.cookie["accessToken"];
+            let history = this.props.history;
 
-        }catch(error){
-            this.setState({errorMessage: `${error}`});
+
+            //check the accessToken, if not found/expired/tampered with then
+            if(this.state.token === myCookie){
+                console.log(`found cookie: ${this.state.token}`);
+                this.setState({authenticated: true});
+                history.push({pathname: "/shipments/list", state: {stateAccount}});
+            }
+
+        }catch(error){ //set this to Permission Denied in production
+            this.setState({errorMessage: `${error.data}`});
         }
     }
+
+
+
+    addCookies = () =>{
+        /**** client side cookies */
+        //1) save the accessToken as a cookie and refreshToken in-memory
+        let myCookies = document.cookie;
+        myCookies = `accessToken=` + this.state.token;
+
+        //add an expiration for client side cookies
+        let cookieExpiration = new Date().setMinutes(30);
+        myCookies += (`Expires=` + cookieExpiration);
+
+        return myCookies;
+    }
+
+
 
     notLoggedInhomePage = () =>{
         if(this.state.authenticated === false) {
@@ -179,19 +180,20 @@ class App extends React.Component{
    render(){
 
 
-    return(
-        <Router>
-            <NavHeader/>
-            {this.notLoggedInhomePage()}
+        return(
+            <Router>
+                <NavHeader/>
+                {this.notLoggedInhomePage()}
 
-            <Switch>
-                {/** It does not redirect to the page when using ProtectedRoute component */}
-                <ProtectedRoute path="/shipping/request" exact component={ShippingRequest} authenticated={this.state.authenticated}   />
-                <ProtectedRoute path="/shipments/list" exact component={ShipmentsTable} authenticated={this.state.authenticated} passAccount={this.state.passAccount}  />  {/** for the other object to get the email directly, I could do this.state.passAccount.email}, but I want to get the whole object and access it there. */}
-                <ProtectedRoute path="/shipping/request/update" exact component={UpdateShipmentRequest} authenticated={this.state.authenticated} />
-            </Switch>
-        </Router>
-        );
+                <Switch>
+                    {/** It does not redirect to the page when using ProtectedRoute component */}
+                    <ProtectedRoute path="/shipping/request" exact component={ShippingRequest} authenticated={this.state.authenticated} token={this.state.token} />
+                    <ProtectedRoute path="/shipments/list" exact component={ShipmentsTable} authenticated={this.state.authenticated} passAccount={this.state.passAccount} token={this.state.token}  />
+                    <ProtectedRoute path="/shipping/request/update" exact component={UpdateShipmentRequest} authenticated={this.state.authenticated} token={this.state.token} />
+
+                </Switch>
+            </Router>
+            );
     }
 }
 
